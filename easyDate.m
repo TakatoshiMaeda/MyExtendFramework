@@ -25,8 +25,8 @@
 
 + (NSString*)nowJpWeekdayStringFromDate:(NSDate*)date
 {
-    NSLocale*   jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocaleStr] autorelease];
-    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZoneStr];
+    NSLocale*   jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocale] autorelease];
+    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZone];
     NSCalendar* calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
     [calendar setLocale:jpLocale];
     [calendar setTimeZone:jpTimeZone];
