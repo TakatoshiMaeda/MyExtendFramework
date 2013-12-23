@@ -3,30 +3,54 @@
 //
 //  Created by Sugamiya Yusuke on 12/03/05.
 //
-//
-//  !!!!!!       Deprecated       !!!!!!
-//  !!!!!! This class is obsolete !!!!!!
-//
 
 #import "easyDate.h"
-#import "NSDate+utilsForJpTimezone.h"
+
+#define jpLocaleStr   @"ja_JP"
+#define jpTimeZoneStr @"JST"
 
 @implementation easyDate
 
 + (NSInteger)nowJpYearInteger
 {
-    return [NSDate nowYearInteger];
+    NSLocale* jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocaleStr] autorelease];
+    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZoneStr];
+    NSDateFormatter* dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"yyyy"];
+    [dateFormatter setLocale:jpLocale];
+    [dateFormatter setTimeZone:jpTimeZone];
+    
+    NSDate* nowDate = [NSDate date];
+    NSString* result = [dateFormatter stringFromDate:nowDate];
+    
+    NSInteger year = [result integerValue];
+    dateFormatter = nil, jpLocale = nil, jpTimeZone = nil;
+    
+    return year;
 }
 
-+ (NSInteger)nowJpWeekdayInteger
+ + (NSInteger)nowJpWeekdayInteger
 {
-    return [NSDate nowWeekdayInteger];
+    NSLocale*   jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocaleStr] autorelease];
+    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZoneStr];
+    NSCalendar* calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
+    [calendar setLocale:jpLocale];
+    [calendar setTimeZone:jpTimeZone];
+    
+    NSDate* nowDate = [NSDate date];
+    NSInteger unitFlags = NSWeekdayCalendarUnit;
+    NSDateComponents* weekDayComponents = [calendar components:unitFlags fromDate:nowDate];
+    
+    NSInteger i = [weekDayComponents weekday];
+    jpLocale = nil, jpTimeZone = nil, nowDate = nil, weekDayComponents = nil;
+    
+    return i;
 }
 
 + (NSString*)nowJpWeekdayStringFromDate:(NSDate*)date
 {
-    NSLocale*   jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocale] autorelease];
-    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZone];
+    NSLocale*   jpLocale = [[[NSLocale alloc] initWithLocaleIdentifier:jpLocaleStr] autorelease];
+    NSTimeZone* jpTimeZone = [NSTimeZone timeZoneWithName:jpTimeZoneStr];
     NSCalendar* calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
     [calendar setLocale:jpLocale];
     [calendar setTimeZone:jpTimeZone];
@@ -50,18 +74,6 @@
     NSInteger i = [self nowJpWeekdayInteger];
     i--; if (i == 0) i = 7;
     return i;
-}
-
-+ (NSString*)easyDateFormatterForJp:(NSString*)dateFormat date:(NSDate*)date
-{
-    if (!date) date = [NSDate date];
-    
-    return [date stringFromDateFormat:dateFormat];
-}
-
-+ (NSDate*)easyDateFormatterForJp:(NSString*)dateFormat dateString:(NSString*)dateString
-{
-    return [NSDate dateFromDateString:dateString dateFormat:dateFormat];
 }
 
 @end
